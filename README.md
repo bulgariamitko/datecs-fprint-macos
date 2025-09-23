@@ -118,7 +118,7 @@ N,1,______,_,__;
 
 ## 🔧 Configuration
 
-Settings are automatically saved to `~/Documents/DatecsFPrint.config`:
+Settings are automatically saved to `~/.datecs-settings`:
 
 ```json
 {
@@ -198,7 +198,7 @@ npm install
 rm -rf ~/Library/Application\ Support/DatecsFPrint
 
 # Reset configuration
-rm ~/Documents/DatecsFPrint.config
+rm ~/.datecs-settings
 ```
 
 ## 🤝 Contributing

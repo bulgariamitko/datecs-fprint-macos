@@ -38,12 +38,12 @@ If applicable, add screenshots to help explain your problem.
 Add any other context about the problem here.
 
 **Logs**
-If applicable, please attach log files from:
-- `~/Documents/DatecsFPrint/Logs/`
-- App log output from the GUI
+If applicable, please provide:
+- App log output from the Log Viewer tab
+- Configuration details from `~/.datecs-settings`
 
 **Have you tried:**
 - [ ] Restarting the app
-- [ ] Testing connection with `python3 simple_tcp_test.py`
+- [ ] Testing connection using the built-in connection tester
 - [ ] Checking printer network connectivity
 - [ ] Reviewing the setup guide

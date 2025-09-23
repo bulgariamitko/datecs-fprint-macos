@@ -106,9 +106,9 @@ N,1,______,_,__;
 ## Support
 
 For issues with the macOS app:
-- Check the log files in ~/Documents/DatecsFPrint/Logs/
+- Check the app logs in the Log Viewer tab
 - Verify printer compatibility
-- Test connection with the Python script first
+- Test connection using the built-in connection tester
 
 For Datecs printer-specific issues:
 - Consult your printer's manual
@@ -117,7 +117,6 @@ For Datecs printer-specific issues:
 
 ## File Locations
 
-- **Configuration**: ~/Documents/DatecsFPrint.config
-- **Logs**: ~/Documents/DatecsFPrint/Logs/
-- **Default execution folder**: ~/Desktop/FPrint/
-- **Answer files**: Same folder as input files (or configured location)
+- **Configuration**: ~/.datecs-settings
+- **Logs**: Displayed in the app's Log Viewer tab
+- **Electron cache**: ~/Library/Application Support/DatecsFPrint

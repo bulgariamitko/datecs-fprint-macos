@@ -88,7 +88,7 @@ Temporary Items
 .apdisk
 
 # App-specific files
-DatecsFPrint.config
+.datecs-settings
 FPrint_log*.txt
 *.FP
 *.ANS

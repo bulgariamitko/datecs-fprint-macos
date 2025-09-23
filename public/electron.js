@@ -61,13 +61,46 @@ app.on('activate', () => {
 // IPC handlers for main process functionality
 
 // Configuration management
-const configPath = path.join(os.homedir(), 'Documents', 'DatecsFPrint.config');
+const configPath = path.join(os.homedir(), '.datecs-settings');
+const oldConfigPath = path.join(os.homedir(), 'Documents', 'DatecsFPrint.config');
+
+// Migration function to move old config to new location
+async function migrateOldConfig() {
+  try {
+    // If new config already exists, no need to migrate
+    if (await fs.pathExists(configPath)) {
+      return false;
+    }
+
+    // If old config exists, migrate it
+    if (await fs.pathExists(oldConfigPath)) {
+      const oldConfig = await fs.readJson(oldConfigPath);
+      await fs.writeJson(configPath, oldConfig, { spaces: 2 });
+
+      // Optionally remove old config file
+      await fs.remove(oldConfigPath);
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.error('Migration error:', error);
+    return false;
+  }
+}
 
 ipcMain.handle('load-config', async () => {
   try {
+    // Try to migrate old config first
+    const migrated = await migrateOldConfig();
+
     if (await fs.pathExists(configPath)) {
       const config = await fs.readJson(configPath);
-      return { success: true, config };
+      return {
+        success: true,
+        config,
+        migrated: migrated
+      };
     } else {
       return { success: false, error: 'Config file not found' };
     }

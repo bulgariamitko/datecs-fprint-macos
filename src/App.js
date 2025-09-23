@@ -44,7 +44,11 @@ function App() {
       const result = await ipcRenderer.invoke('load-config');
       if (result.success) {
         setConfig(result.config);
-        addLog('Configuration loaded successfully', 'success');
+        if (result.migrated) {
+          addLog('✅ Configuration migrated from old location to ~/.datecs-settings', 'success');
+        } else {
+          addLog('Configuration loaded successfully', 'success');
+        }
       } else {
         addLog('No existing configuration found, using defaults', 'info');
       }
