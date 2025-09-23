@@ -1,49 +1,64 @@
-# Xcode
-*.xcodeproj/*
-!*.xcodeproj/project.pbxproj
-!*.xcodeproj/xcshareddata/
-!*.xcodeproj/project.xcworkspace/
-*.xcodeproj/project.xcworkspace/*
-!*.xcodeproj/project.xcworkspace/contents.xcworkspacedata
-!*.xcodeproj/project.xcworkspace/xcshareddata/
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# User-specific files
-*.xcuserdata/
-*.xcuserdatad/
-
-# Build products
+# Build outputs
+dist/
 build/
-DerivedData/
-*.hmap
-*.ipa
-*.dSYM.zip
-*.dSYM
+out/
 
-# CocoaPods
-Pods/
-*.xcworkspace
+# Electron specific
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.exe
+*.zip
 
-# Carthage
-Carthage/Build/
+# Logs
+logs
+*.log
 
-# Swift Package Manager
-.build/
-Packages/
-Package.pins
-Package.resolved
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# Accio dependency management
-Dependencies/
-.accio/
+# Coverage directory used by tools like istanbul
+coverage/
 
-# fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output
+# nyc test coverage
+.nyc_output
 
-# Code Injection
-iOSInjectionProject/
+# Grunt intermediate storage
+.grunt
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons
+build/Release
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
 
 # macOS
 .DS_Store
@@ -87,7 +102,6 @@ logs/
 .vscode/
 .idea/
 
-# Swift
-*.swiftdoc
-*.swiftmodule
-*.swiftsourceinfo
+# Temporary files
+tmp/
+temp/
