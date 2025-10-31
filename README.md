@@ -318,6 +318,18 @@ All technical documentation is in the [`docs/`](docs/) folder:
 - **[docs/DATECS_SOLUTION_COMPLETE.md](docs/DATECS_SOLUTION_COMPLETE.md)** - Protocol documentation
 - **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Detailed setup instructions
 
+## 🧪 Experimental: Native Protocol Implementation
+
+We're also working on a **native macOS implementation** that doesn't require Wine. This is experimental work to decode the Datecs protocol for native Node.js support.
+
+📁 **See [experimental/native-protocol/](experimental/native-protocol/)** for:
+- Native protocol decoder (work in progress)
+- Test scripts and utilities
+- Protocol analysis tools
+- Contribution guide for protocol decoding
+
+**Note**: The Wine approach is the recommended production solution. The native protocol work is experimental and not yet feature-complete. Contributions welcome!
+
 ## 📋 Roadmap
 
 ### ✅ Completed
@@ -342,6 +354,13 @@ All technical documentation is in the [`docs/`](docs/) folder:
 - [ ] Advanced diagnostics
 - [ ] Print queue management
 - [ ] Cloud sync for configurations
+
+### 🧪 Experimental (Native Protocol)
+- [x] Basic TCP/IP communication
+- [x] Protocol analysis and documentation
+- [ ] Complete protocol decoder
+- [ ] All FPrint commands implemented
+- [ ] Replace Wine with native implementation
 
 ## 🤝 Contributing
 
