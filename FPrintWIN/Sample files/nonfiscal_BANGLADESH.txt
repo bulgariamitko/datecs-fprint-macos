@@ -1,0 +1,6 @@
+38,1,______,_,__;1;000000;
+P,1,______,_,__;In the official receipt;;;;;
+P,1,______,_,__; only P (text print);;;;;
+P,1,______,_,__;and T (closing of official ;;;;;
+P,1,______,_,__;receipt) commands can be executed. ;;;;;
+T,1,______,_,__;

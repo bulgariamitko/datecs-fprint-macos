@@ -1,0 +1,10 @@
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\bin\Debug\DLLdemo.exe.config
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\bin\Debug\DLLdemo.exe
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\bin\Debug\DLLdemo.pdb
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\obj\Debug\FPrintDLLDEMO.csprojAssemblyReference.cache
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\obj\Debug\WindowsFormsApp1.Form1.resources
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\obj\Debug\DLLdemo.Properties.Resources.resources
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\obj\Debug\FPrintDLLDEMO.csproj.GenerateResource.cache
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\obj\Debug\FPrintDLLDEMO.csproj.CoreCompileInputs.cache
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\obj\Debug\DLLdemo.exe
+D:\SOFT_SVN\PROJECTS\DLLs\FPrintWIN_DLL\DllDemo\DLL_DEMO\obj\Debug\DLLdemo.pdb

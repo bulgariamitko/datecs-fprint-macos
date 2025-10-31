@@ -1,0 +1,12 @@
+Path to FPrint.exe:
+P:\SA\
+Path to file(for print) name:
+C:\Program Files\Datecs Applications\FPrint WIN\Sample files\Federation of Bosnia and Herzegovina\
+Path to answer file:
+E:\SOFT_SVN\EXAMPLES\PROGRAMS\FP_Launcher\BIN\
+Execute dir:
+D:\SOFT_SVN\PROJECTS\FPrintWIN\BIN\execute
+Path to file(for copy) name:
+D:\SOFT_SVN\PROJECTS\FPrintWIN\BIN\execute\
+Answer dir:
+E:\SOFT_SVN\EXAMPLES\PROGRAMS\FP_Launcher\BIN\

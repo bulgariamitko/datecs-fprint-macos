@@ -58,80 +58,45 @@ wine --version
 # Should show: wine-8.0 or newer
 ```
 
-### Step 2: Install FPrint.exe
+### Step 2: FPrint Software (Included!)
 
-You need the Windows FPrint software from Datecs.
+**Good news:** FPrint software is already included in this repository! 📦
 
-#### Option A: Run Installer with Wine
-```bash
-# Download FPrint installer from Datecs
-# Then run:
-wine FPrintSetup.exe
+The `FPrintWIN/` folder contains all necessary files:
+- `FPrint_SettingsManager.exe` - Configuration tool (run this FIRST)
+- `FPrint.exe` - Main printer service (run this SECOND in background)
+- All required DLLs and support files
 
-# Follow the installation wizard
-# Default path: C:\Program Files\Datecs\FPrint\
-```
+No need to download or install anything else!
 
-#### Option B: Manual Installation
-```bash
-# Create directory
-mkdir -p ~/.wine/drive_c/Program\ Files/Datecs/FPrint/
+### Step 3: Configure FPrint (Settings Manager)
 
-# Copy FPrint files
-cp /path/to/FPrint.exe ~/.wine/drive_c/Program\ Files/Datecs/FPrint/
-cp /path/to/*.dll ~/.wine/drive_c/Program\ Files/Datecs/FPrint/
-
-# Verify
-ls ~/.wine/drive_c/Program\ Files/Datecs/FPrint/FPrint.exe
-```
-
-#### Option C: Extract from Installer
-```bash
-# Install p7zip
-brew install p7zip
-
-# Extract installer
-7z x FPrintSetup.exe -o/tmp/fprint_extracted
-
-# Copy to Wine directory
-mkdir -p ~/.wine/drive_c/Program\ Files/Datecs/FPrint/
-cp /tmp/fprint_extracted/* ~/.wine/drive_c/Program\ Files/Datecs/FPrint/
-```
-
-### Step 3: Configure FPrint
-
-Create the configuration file for your printer:
+**IMPORTANT:** Run the Settings Manager FIRST to configure your printer.
 
 ```bash
-# Edit the config file
-nano ~/.wine/drive_c/Program\ Files/Datecs/FPrint/DatecsFPrint.config
+# Navigate to repository folder
+cd datecs-fprint-macos
+
+# Run FPrint Settings Manager with Wine
+wine FPrintWIN/FPrint_SettingsManager.exe
 ```
 
-**Example configuration:**
-```xml
-<?xml version="1.0"?>
-<configuration>
-  <appSettings>
-    <add key="IPAddress" value="192.168.1.155" />
-    <add key="Port" value="4999" />
-    <add key="DeviceModel" value="DP-25MX" />
-    <add key="SerialNumber" value="DA020990" />
-    <add key="FiscalMemoryNumber" value="12345678" />
-    <add key="Timeout" value="10000" />
-    <add key="ExecutionFolder" value="C:\FPrintCommands" />
-  </appSettings>
-</configuration>
-```
+**In the Settings Manager window:**
+1. Enter your printer's **IP Address** (e.g., `192.168.1.155`)
+2. Enter **Port** (usually `4999`)
+3. Enter **Device Model** (e.g., `DP-25MX`)
+4. Enter **Serial Number** (from printer info menu)
+5. Enter **Fiscal Memory Number** (from printer info menu)
+6. Set **Execution Folder** (where to watch for commands)
+   - Recommended: `C:\FPrintCommands`
+7. Click **Save** to save configuration
+8. Close the Settings Manager
 
-**Adjust these values for your printer:**
-- `IPAddress` - Your printer's IP (check printer display/menu)
-- `Port` - Usually 4999 for Datecs
-- `DeviceModel` - Your printer model (DP-25MX, DP-50X, FP-2000, etc.)
-- `SerialNumber` - From printer info menu
-- `FiscalMemoryNumber` - From printer info menu
-- `ExecutionFolder` - Where to watch for command files
+The settings will be saved to `FPrintWIN/FPrint.ini` and `FPrintWIN/Settings.dat`.
 
 ### Step 4: Create Command Folders
+
+Create the folders that FPrint will monitor:
 
 ```bash
 # Create command and result folders
@@ -139,26 +104,32 @@ mkdir -p ~/.wine/drive_c/FPrintCommands
 mkdir -p ~/.wine/drive_c/FPrintResults
 ```
 
+**Note:** These paths should match what you configured in Settings Manager (Step 3).
+
 ### Step 5: Run FPrint in Resident Mode
 
-```bash
-# Start FPrint
-wine ~/.wine/drive_c/Program\ Files/Datecs/FPrint/FPrint.exe /resident
+Now that configuration is complete, run FPrint.exe in the background:
 
-# FPrint will now monitor C:\FPrintCommands for command files
-```
-
-**To run in background:**
 ```bash
-# Start FPrint in background
-nohup wine ~/.wine/drive_c/Program\ Files/Datecs/FPrint/FPrint.exe /resident > /tmp/fprint.log 2>&1 &
+# Navigate to repository folder
+cd datecs-fprint-macos
+
+# Start FPrint in background (recommended)
+nohup wine FPrintWIN/FPrint.exe /resident > /tmp/fprint.log 2>&1 &
 
 # Check if running
 ps aux | grep FPrint.exe
 
-# View logs
+# View logs (optional)
 tail -f /tmp/fprint.log
 ```
+
+**Or run in foreground** (to see output directly):
+```bash
+wine FPrintWIN/FPrint.exe /resident
+```
+
+FPrint is now running and monitoring for command files! 🚀
 
 ### Step 6: Send Test Command
 
@@ -172,17 +143,30 @@ cat ~/.wine/drive_c/FPrintResults/test01.txt
 
 If you see a response with printer information, it's working! 🎉
 
+**To stop FPrint:**
+```bash
+pkill -f FPrint.exe
+```
+
 ---
 
 ## 📖 Using FPrint via Wine
 
 ### Starting FPrint
+
+**First time setup:** Run Settings Manager first!
+```bash
+wine FPrintWIN/FPrint_SettingsManager.exe
+# Configure printer, save, close
+```
+
+**Then start FPrint:**
 ```bash
 # Foreground (see output)
-wine ~/.wine/drive_c/Program\ Files/Datecs/FPrint/FPrint.exe /resident
+wine FPrintWIN/FPrint.exe /resident
 
-# Background
-nohup wine ~/.wine/drive_c/Program\ Files/Datecs/FPrint/FPrint.exe /resident > /tmp/fprint.log 2>&1 &
+# Background (recommended)
+nohup wine FPrintWIN/FPrint.exe /resident > /tmp/fprint.log 2>&1 &
 ```
 
 ### Stopping FPrint
@@ -333,12 +317,14 @@ telnet YOUR_PRINTER_IP 4999
 
 | What | Location |
 |------|----------|
-| Wine C: drive | `~/.wine/drive_c/` |
-| FPrint.exe | `~/.wine/drive_c/Program Files/Datecs/FPrint/FPrint.exe` |
-| FPrint config | `~/.wine/drive_c/Program Files/Datecs/FPrint/DatecsFPrint.config` |
+| FPrint executables | `FPrintWIN/` (in this repo) |
+| Settings Manager | `FPrintWIN/FPrint_SettingsManager.exe` |
+| FPrint main | `FPrintWIN/FPrint.exe` |
+| FPrint config | `FPrintWIN/FPrint.ini`, `FPrintWIN/Settings.dat` |
 | Command files | `~/.wine/drive_c/FPrintCommands/` |
 | Result files | `~/.wine/drive_c/FPrintResults/` |
 | FPrint logs | `/tmp/fprint.log` (if using nohup) |
+| Wine C: drive | `~/.wine/drive_c/` |
 
 ---
 
@@ -443,17 +429,19 @@ MIT License - see [LICENSE](LICENSE) file for details.
 # 1. Install Wine
 brew install wine-stable
 
-# 2. Install FPrint.exe (get from Datecs)
-wine FPrintSetup.exe
+# 2. Clone this repository
+git clone https://github.com/bulgariamitko/datecs-fprint-macos.git
+cd datecs-fprint-macos
 
-# 3. Configure printer settings
-nano ~/.wine/drive_c/Program\ Files/Datecs/FPrint/DatecsFPrint.config
+# 3. Run Settings Manager (configure your printer)
+wine FPrintWIN/FPrint_SettingsManager.exe
+# Enter IP, port, model, serial, etc. → Save → Close
 
-# 4. Create folders
+# 4. Create command folders
 mkdir -p ~/.wine/drive_c/FPrintCommands ~/.wine/drive_c/FPrintResults
 
-# 5. Start FPrint
-wine ~/.wine/drive_c/Program\ Files/Datecs/FPrint/FPrint.exe /resident
+# 5. Start FPrint in background
+nohup wine FPrintWIN/FPrint.exe /resident > /tmp/fprint.log 2>&1 &
 
 # 6. Send test command
 echo "I,1,______,_,__;0;80" > ~/.wine/drive_c/FPrintCommands/test.txt
@@ -462,7 +450,7 @@ echo "I,1,______,_,__;0;80" > ~/.wine/drive_c/FPrintCommands/test.txt
 cat ~/.wine/drive_c/FPrintResults/test.txt
 ```
 
-**That's it!** You're now using FPrint on macOS. 🎉
+**That's it!** FPrint software is included, no separate download needed. 🎉
 
 ---
 
