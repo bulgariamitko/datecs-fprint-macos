@@ -1,12 +1,13 @@
 import React from 'react';
 import { Play, Send, AlertCircle, CheckCircle, Settings } from 'lucide-react';
+import InfoTooltip from './InfoTooltip';
 
 const ConnectionTester = ({
   config,
   connectionStatus,
-  onTestConnection,
-  onSendTestCommand,
-  isConfigured
+  isConfigured,
+  onManualTest,
+  isManualTesting
 }) => {
   if (!isConfigured) {
     return (
@@ -14,16 +15,8 @@ const ConnectionTester = ({
         <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
         <h3 className="text-lg font-medium mb-2">Configuration Required</h3>
         <p className="text-muted mb-4">
-          Please configure your printer settings before testing the connection.
+          Configure your printer in Settings first.
         </p>
-        <p className="text-sm text-muted mb-4">
-          You need to set at least:
-        </p>
-        <ul className="text-sm text-muted text-left max-w-md mx-auto">
-          <li>• IP Address</li>
-          <li>• Device Model</li>
-          <li>• Serial Number</li>
-        </ul>
       </div>
     );
   }
@@ -51,97 +44,90 @@ const ConnectionTester = ({
         </div>
       </div>
 
-      {/* Test Steps */}
-      <div className="space-y-4">
-        {/* Step 1: Basic Connection */}
-        <div className="border rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium flex items-center gap-2">
-              <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold">
-                1
-              </span>
-              Test TCP Connection
-            </h3>
-            <button
-              className="btn btn-primary"
-              onClick={onTestConnection}
-              disabled={connectionStatus === 'testing'}
-            >
-              {connectionStatus === 'testing' ? (
-                <>
-                  <div className="spinner" />
-                  Testing...
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4" />
-                  Test Connection
-                </>
-              )}
-            </button>
-          </div>
-          <p className="text-sm text-muted">
-            This tests if your Mac can connect to the printer on the network.
-          </p>
-          {connectionStatus === 'connected' && (
-            <div className="mt-2 flex items-center gap-2 text-green-600">
-              <CheckCircle className="w-4 h-4" />
-              <span className="text-sm">Connection successful!</span>
-            </div>
-          )}
+      {/* Connection Status Info */}
+      <div className="border rounded-lg p-4">
+        <h3 className="font-medium mb-3 flex items-center gap-2">
+          <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold">
+            ⚡
+          </span>
+          Automatic Connection Monitoring
+        </h3>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-sm text-muted">Connection status is checked every 10 seconds</span>
+          <InfoTooltip content="The app automatically monitors your printer connection every 10 seconds. No manual testing required - just configure your printer and the app will show real-time status." />
         </div>
 
-        {/* Step 2: Send Test Command */}
-        <div className="border rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium flex items-center gap-2">
-              <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold">
-                2
-              </span>
-              Send Test Command
-            </h3>
-            <button
-              className="btn btn-success"
-              onClick={onSendTestCommand}
-              disabled={connectionStatus !== 'connected'}
-            >
-              <Send className="w-4 h-4" />
-              Send Command
-            </button>
+        {connectionStatus === 'connected' && (
+          <div className="flex items-center gap-2 text-green-600">
+            <CheckCircle className="w-4 h-4" />
+            <span className="text-sm">Printer is online and responding</span>
           </div>
-          <p className="text-sm text-muted">
-            Sends a device information command (I,1,______,_,__;0;80) to verify printer communication.
-          </p>
-          {connectionStatus !== 'connected' && (
-            <div className="mt-2 text-sm text-yellow-600">
-              ⚠️ Complete step 1 first
-            </div>
-          )}
+        )}
+
+        {connectionStatus === 'disconnected' && (
+          <div className="flex items-center gap-2 text-red-600">
+            <AlertCircle className="w-4 h-4" />
+            <span className="text-sm">Printer is offline or unreachable</span>
+          </div>
+        )}
+
+        {connectionStatus === 'testing' && (
+          <div className="flex items-center gap-2 text-yellow-600">
+            <div className="spinner" />
+            <span className="text-sm">Checking connection...</span>
+          </div>
+        )}
+      </div>
+
+      {/* Manual Test Section */}
+      <div className="border rounded-lg p-4 mt-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-medium flex items-center gap-2">
+            <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-bold">
+              🔧
+            </span>
+            Manual Connection Test
+          </h3>
+          <button
+            className="btn btn-primary"
+            onClick={onManualTest}
+            disabled={isManualTesting}
+          >
+            {isManualTesting ? (
+              <>
+                <div className="spinner" />
+                Testing...
+              </>
+            ) : (
+              <>
+                <Play className="w-4 h-4" />
+                Test Connection
+              </>
+            )}
+          </button>
+        </div>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-sm text-muted">Tests basic connection to the printer</span>
+          <InfoTooltip content="This manual test connects to the printer and verifies that basic TCP communication is working." />
         </div>
       </div>
 
-      {/* Test Commands Reference */}
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-        <h4 className="font-medium mb-2">Common Test Commands:</h4>
-        <div className="text-sm text-muted space-y-1">
-          <div><code>I,1,______,_,__;0;80</code> - Get device information</div>
-          <div><code>N,1,______,_,__;</code> - Get last document number</div>
-        </div>
-        <p className="text-xs text-muted mt-2">
-          These commands are safe to run and won't affect your printer's fiscal state.
-        </p>
-      </div>
-
-      {/* Troubleshooting */}
-      <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
-        <h4 className="font-medium mb-2">Troubleshooting:</h4>
-        <ul className="text-sm text-muted space-y-1">
-          <li>• Ensure printer is powered on and connected to network</li>
-          <li>• Verify IP address is correct (check printer display/menu)</li>
-          <li>• Check if port 4999 is accessible (standard for Datecs)</li>
-          <li>• Confirm Mac and printer are on same network</li>
-          <li>• Disable firewall temporarily if connection fails</li>
-        </ul>
+      {/* Help Section */}
+      <div className="mt-6 flex items-center gap-4 text-sm text-muted">
+        <span>Need help?</span>
+        <InfoTooltip content="The connection test verifies that your Mac can reach the printer's IP address on the specified port. Make sure the printer is powered on and connected to the same network." />
+        <InfoTooltip content={
+          <div>
+            <strong>Troubleshooting Tips:</strong>
+            <ul className="mt-2 space-y-1">
+              <li>• Ensure printer is powered on and connected to network</li>
+              <li>• Verify IP address is correct (check printer display/menu)</li>
+              <li>• Check if port 4999 is accessible (standard for Datecs)</li>
+              <li>• Confirm Mac and printer are on same network</li>
+              <li>• Disable firewall temporarily if connection fails</li>
+            </ul>
+          </div>
+        } />
       </div>
     </div>
   );

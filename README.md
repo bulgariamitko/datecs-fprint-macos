@@ -3,192 +3,284 @@
 [![macOS](https://img.shields.io/badge/macOS-14.0+-blue.svg)](https://www.apple.com/macos/)
 [![Electron](https://img.shields.io/badge/Electron-22.0+-green.svg)](https://electronjs.org/)
 [![React](https://img.shields.io/badge/React-18.2+-blue.svg)](https://reactjs.org/)
+[![Wine](https://img.shields.io/badge/Wine-8.0+-red.svg)](https://www.winehq.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A modern **Electron + React** desktop application that brings Windows FPrint functionality to Mac users with Datecs fiscal printers. Built with web technologies for easy development and cross-platform compatibility.
-
-![DatecsFPrint Screenshot](https://via.placeholder.com/800x500/667eea/FFFFFF?text=DatecsFPrint+for+macOS+-+Electron+React)
+A modern **Electron + React** desktop application that brings Windows FPrint functionality to macOS users with Datecs fiscal printers. Uses Wine to run the native Windows FPrint.exe in the background, providing 100% compatibility with all Datecs printer features.
 
 ## 🚀 Why DatecsFPrint for macOS?
 
-If you're using **Datecs fiscal printers** on macOS and missing the Windows FPrint functionality, this app is for you! It provides:
+If you're using **Datecs fiscal printers** on macOS and need the full Windows FPrint functionality, this app is for you! It provides:
 
-- ✅ **Modern Electron + React** architecture for easy development
-- ✅ **Cross-platform compatibility** (macOS, Windows, Linux)
+- ✅ **100% Windows FPrint compatibility** via Wine integration
+- ✅ **Modern Electron + React** UI for easy management
+- ✅ **Native macOS experience** with cross-platform compatibility
+- ✅ **Automatic Wine setup** - handles FPrint.exe in background
 - ✅ **Real-time connection testing** with beautiful UI
-- ✅ **100% compatibility** with Windows FPrint command format
-- ✅ **TCP/IP networking** for modern Ethernet/WiFi printers
+- ✅ **Resident mode monitoring** for command file processing
 - ✅ **Live logging** and comprehensive error handling
 - ✅ **Easy configuration** with persistent settings
 
+## 🎯 How It Works
+
+This application uses a **hybrid approach** for maximum compatibility:
+
+1. **Wine Backend**: Runs the official Windows `FPrint.exe` in the background using Wine
+2. **Modern UI**: Provides a sleek Electron + React interface for configuration and monitoring
+3. **File-Based Communication**: Manages command files that FPrint.exe processes (resident mode)
+4. **Automatic Management**: Handles Wine installation, FPrint setup, and process management
+
+```
+┌─────────────────────────────────────┐
+│   Electron + React UI (macOS)       │
+│   - Configuration                   │
+│   - Monitoring                      │
+│   - Logging                         │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│   Wine Layer                        │
+│   Runs FPrint.exe in background     │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│   Datecs Fiscal Printer (TCP/IP)    │
+└─────────────────────────────────────┘
+```
+
 ## 📦 Supported Datecs Printers
 
-This application works with any Datecs fiscal printer that supports TCP/IP communication:
+All Datecs fiscal printers supported by Windows FPrint:
 
-| Model Series | Tested | Notes |
+| Model Series | Status | Notes |
 |--------------|--------|-------|
-| **DP-25MX** | ✅ Primary | Full feature support |
+| **DP-25MX** | ✅ Tested | Full feature support |
 | **DP-50X** | ✅ Compatible | Network-enabled models |
 | **FP-2000** | ✅ Compatible | TCP/IP variants |
-| **Other Models** | 🔄 Should work | If it has Ethernet/WiFi |
+| **All Models** | ✅ Compatible | If supported by Windows FPrint |
 
 ## 🛠️ Quick Start
 
 ### Prerequisites
 
 - **macOS 14.0+** (Sonoma or later)
-- **Node.js 14+**
-- **npm** or **yarn**
-- **Datecs fiscal printer** with network connectivity
+- **Node.js 14+** and npm
+- **Wine** (automatically installed if needed)
+- **Datecs fiscal printer** with network connectivity (TCP/IP)
+- **FPrint.exe** (Windows FPrint installer)
 
-### Download & Install
+### Installation
 
-#### Option 1: Download Release (Recommended)
-1. Go to [Releases](../../releases)
-2. Download the latest `DatecsFPrint-macOS.dmg`
-3. Open DMG and drag app to Applications
-4. Launch from Applications folder
+#### Option 1: Download Release (Coming Soon)
+Pre-built macOS app will be available in [Releases](../../releases)
 
 #### Option 2: Build from Source
 ```bash
+# Clone the repository
 git clone https://github.com/bulgariamitko/datecs-fprint-macos.git
 cd datecs-fprint-macos
+
+# Install dependencies
 npm install
+
+# Start development mode
 npm run dev
 ```
 
 ### First-Time Setup
 
-1. **Launch DatecsFPrint** - Modern Electron app opens
-2. **Go to Settings tab** to configure your printer
-3. **Enter your printer details:**
-   - IP Address (e.g., `192.168.1.100`)
-   - Port (usually `4999`)
-   - Device Model (e.g., `DP-25MX`)
-   - Serial Number (from printer info)
-   - Fiscal Memory Number (from printer info)
-4. **Click "Save Configuration"**
-5. **Test Connection** to verify everything works
-6. **Send Test Command** to confirm communication
+1. **Install Wine** (if not already installed):
+   ```bash
+   # Using Homebrew
+   brew install wine-stable
+   ```
+
+2. **Setup FPrint.exe**:
+   - Download the Windows FPrint installer from Datecs
+   - Run the installer using Wine: `wine FPrintSetup.exe`
+   - Or place `FPrint.exe` in `~/.wine/drive_c/Program Files/Datecs/FPrint/`
+
+3. **Configure the Application**:
+   - Launch DatecsFPrint for macOS
+   - Go to Settings tab
+   - Enter printer IP address (e.g., `192.168.1.155`)
+   - Enter port (default: `4999`)
+   - Add printer details (model, serial number)
+   - Click "Save Configuration"
+
+4. **Start FPrint Service**:
+   - The app will automatically start FPrint.exe in the background via Wine
+   - Resident mode will monitor command files
+   - Check logs to verify FPrint is running
+
+5. **Test the Connection**:
+   - Use the Connection Tester tab
+   - Send a test command
+   - Monitor the Activity Logs
 
 ## 🎯 Features
 
-### 🖥️ Modern UI Features
-- **Electron + React** desktop app with native feel
-- **Real-time connection status** with visual indicators
-- **Interactive connection testing** with step-by-step guidance
-- **Live activity logging** with export functionality
-- **Persistent configuration** saved locally
-- **Clean, intuitive interface** inspired by modern macOS apps
+### ✨ Core Features
+- **Wine Integration** - Seamless Windows FPrint.exe execution on macOS
+- **Automatic Process Management** - Starts/stops FPrint.exe as needed
+- **Resident Mode** - File-based command processing
+- **Real-time Monitoring** - Live status and logging
+- **Configuration Management** - Settings saved automatically
+- **Connection Testing** - Built-in diagnostics
 
-### 🔧 Technical Features
-- **TCP/IP communication** with configurable timeouts
-- **Command validation** and response parsing
-- **Error handling** with detailed logging
-- **Cross-platform compatibility** (runs on Windows/Linux too)
-- **Developer-friendly** web technologies
+### 🖥️ User Interface
+- **Modern React UI** - Clean, intuitive design
+- **Resident Mode Monitor** - Watch command files being processed
+- **Connection Tester** - Step-by-step connection verification
+- **Activity Logs** - Real-time command/response viewer
+- **Settings Panel** - Easy printer and Wine configuration
+- **Status Indicators** - Visual feedback for FPrint and printer state
 
-### 💻 Developer Features
-- **Modern JavaScript** with React components
-- **IPC communication** between main and renderer processes
-- **File system operations** for configuration management
-- **Network abstraction** for TCP communication
-- **Easy to extend** and customize
+### 🔧 Developer Features
+- **Modular Architecture** - Easy to extend
+- **Well-documented** - See [docs/](docs/) for details
+- **Process Isolation** - Wine runs in separate process
+- **Error Recovery** - Automatic FPrint restart on failures
 
-## 📖 Usage Examples
+## 📖 Usage
 
-### Basic Connection Test
-The app provides a guided connection testing process:
+### Using the Desktop App
 
-1. **Test TCP Connection** - Verifies network connectivity
-2. **Send Test Command** - Sends device information request
-3. **View Real-time Logs** - See all communication in detail
+1. **Start the app:**
+   ```bash
+   npm run dev
+   ```
 
-### Standard Commands
+2. **Configure your printer** in the Settings tab
+
+3. **The app automatically**:
+   - Starts FPrint.exe via Wine in resident mode
+   - Monitors command files in the designated folder
+   - Processes commands and sends to printer
+   - Displays results in Activity Logs
+
+4. **Monitor activity** in the Resident Mode and Logs tabs
+
+### Resident Mode
+
+The application uses file-based communication with FPrint:
+
+1. Command files are created in: `~/.datecs-fprint/commands/`
+2. FPrint.exe (running via Wine) monitors this folder
+3. When a file appears, FPrint processes it
+4. Results are written to: `~/.datecs-fprint/results/`
+5. The UI displays real-time updates
+
+### Manual FPrint Control
+
+You can also control FPrint manually:
+
+```bash
+# Start FPrint in resident mode
+wine ~/.wine/drive_c/Program\ Files/Datecs/FPrint/FPrint.exe /resident
+
+# Stop FPrint
+pkill -f FPrint.exe
 ```
-# Get device information
-I,1,______,_,__;0;80
 
-# Get last document number
-N,1,______,_,__;
+## 📁 Project Structure
 
-# Open fiscal receipt (example)
-48,1,______,_,__;1;1;1;0;OPERATOR001;
 ```
-
-## 🔧 Configuration
-
-Settings are automatically saved to `~/.datecs-settings`:
-
-```json
-{
-  "ipAddress": "192.168.1.100",
-  "port": 4999,
-  "deviceModel": "DP-25MX",
-  "serialNumber": "AB123456",
-  "fiscalMemoryNumber": "12345678",
-  "timeout": 10000
-}
+datecs-fprint-macos/
+├── src/                          # React application source
+│   ├── App.js                    # Main React component
+│   ├── components/               # UI components
+│   │   ├── ConfigurationPanel.js # Settings UI
+│   │   ├── ConnectionTester.js   # Connection testing
+│   │   ├── InfoTooltip.js        # Help tooltips
+│   │   ├── ResidentMode.js       # Resident mode monitor
+│   │   └── LogViewer.js          # Activity logs
+│   └── index.js                  # React entry point
+├── public/                       # Electron main process
+│   ├── electron.js               # Main Electron script
+│   └── index.html                # HTML template
+├── docs/                         # Technical documentation
+├── datecs_printer_complete.js    # Printer protocol module
+├── test_*.js                     # Test scripts
+├── *.sh                          # Shell utilities
+├── package.json                  # Dependencies
+└── README.md                     # This file
 ```
 
 ## 🧪 Development
 
-### Tech Stack
-- **Electron 22+** - Desktop app framework
-- **React 18+** - UI library
-- **Lucide React** - Beautiful icons
-- **Node.js** - Backend functionality
+### Available Scripts
 
-### Project Structure
-```
-├── src/
-│   ├── App.js                    # Main React component
-│   ├── components/
-│   │   ├── ConfigurationPanel.js # Settings UI
-│   │   ├── ConnectionTester.js   # Connection testing
-│   │   └── LogViewer.js         # Activity logs
-│   └── index.js                 # React entry point
-├── public/
-│   ├── electron.js              # Electron main process
-│   └── index.html              # HTML template
-├── package.json                # Dependencies and scripts
-└── README.md                   # This file
-```
-
-### Development Scripts
 ```bash
-# Start development server
+# Development mode (React + Electron)
 npm run dev
 
-# Build for production
+# Build React app
 npm run build
 
-# Package as desktop app
+# Build desktop app (dmg/exe/AppImage)
 npm run dist
 
-# Run just Electron
+# Run Electron only
 npm run electron
 
-# Run just React
+# Run React only
 npm start
+
+# Run tests
+npm test
 ```
+
+### Tech Stack
+
+- **Electron 22+** - Desktop framework
+- **React 18+** - UI library
+- **Node.js** - Backend functionality
+- **Wine 8+** - Windows compatibility layer
+- **Chokidar** - File system monitoring
+- **Lucide React** - Icons
 
 ## 🚨 Troubleshooting
 
-### Connection Issues
-- ✅ Printer is powered on and connected to network
-- ✅ IP address is correct (check printer display/menu)
-- ✅ Port 4999 is accessible (default for Datecs)
-- ✅ Firewall allows the connection
-- ✅ Printer and Mac are on same network
+### Wine Issues
 
-### App Issues
-- ✅ macOS 14.0+ is required
-- ✅ Node.js 14+ is installed
-- ✅ App has network permissions
-- ✅ Check logs in the app's Log Viewer
+✅ **Check Wine installation:**
+```bash
+wine --version
+```
 
-### Common Fixes
+✅ **Verify FPrint.exe location:**
+```bash
+ls ~/.wine/drive_c/Program\ Files/Datecs/FPrint/FPrint.exe
+```
+
+✅ **Check if FPrint is running:**
+```bash
+ps aux | grep FPrint.exe
+```
+
+✅ **Wine logs:**
+```bash
+tail -f ~/.wine/drive_c/Program\ Files/Datecs/FPrint/fprint.log
+```
+
+### Printer Not Connecting?
+
+✅ **Check these first:**
+- Printer is powered on
+- Printer has network connection (Ethernet/WiFi)
+- IP address is correct (check printer display)
+- Port 4999 is correct (standard for Datecs)
+- Mac and printer are on same network
+- Firewall not blocking port 4999
+- FPrint.exe is running (check Activity Logs)
+
+### App Issues?
+
+✅ **Try these fixes:**
+
 ```bash
 # Reinstall dependencies
 rm -rf node_modules package-lock.json
@@ -199,61 +291,94 @@ rm -rf ~/Library/Application\ Support/DatecsFPrint
 
 # Reset configuration
 rm ~/.datecs-settings
+
+# Restart FPrint
+pkill -f FPrint.exe
+# App will automatically restart it
+
+# Check Node.js version
+node --version  # Should be 14+
+
+# Check Wine version
+wine --version  # Should be 8.0+
 ```
 
-## 🤝 Contributing
+### Still Having Issues?
 
-Contributions are welcome! The modern web tech stack makes it easy to contribute:
+1. Check the **Logs tab** in the app for detailed error messages
+2. Review [technical documentation](docs/)
+3. Check Wine logs at `~/.wine/drive_c/Program Files/Datecs/FPrint/fprint.log`
+4. Open an [issue](../../issues) on GitHub with logs
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes in React/JavaScript
-4. Test with `npm run dev`
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+## 📚 Documentation
 
-### Development Setup
-```bash
-git clone https://github.com/bulgariamitko/datecs-fprint-macos.git
-cd datecs-fprint-macos
-npm install
-npm run dev
-```
+All technical documentation is in the [`docs/`](docs/) folder:
+
+- **[docs/README.md](docs/README.md)** - Documentation index
+- **[docs/DATECS_SOLUTION_COMPLETE.md](docs/DATECS_SOLUTION_COMPLETE.md)** - Protocol documentation
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Detailed setup instructions
 
 ## 📋 Roadmap
 
-- [x] **Electron + React** architecture
-- [x] **TCP/IP communication** with real-time testing
-- [x] **Modern UI** with connection status and logging
-- [x] **Configuration management** with persistence
-- [x] **Cross-platform compatibility**
-- [ ] **Serial (RS-232)** communication support
-- [ ] **File processing** and resident mode
-- [ ] **Command history** and templates
-- [ ] **Multiple printer** support
-- [ ] **App Store distribution**
+### ✅ Completed
+- [x] Electron + React architecture
+- [x] Modern responsive UI
+- [x] Configuration management
+- [x] Connection testing
+- [x] Wine integration for FPrint.exe
+- [x] Resident mode monitoring
+- [x] Activity logging
+
+### 🔜 Coming Soon
+- [ ] Automatic Wine installation
+- [ ] FPrint.exe bundling
+- [ ] Enhanced error recovery
+- [ ] Multiple printer support
+- [ ] Command templates
+- [ ] App Store distribution
+
+### 🔮 Future Ideas
+- [ ] Command history and replay
+- [ ] Advanced diagnostics
+- [ ] Print queue management
+- [ ] Cloud sync for configurations
+
+## 🤝 Contributing
+
+Contributions welcome! This project uses modern web technologies:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test with `npm run dev`
+5. Submit a Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- **Datecs** for their fiscal printer protocol documentation
-- **Electron** for the amazing cross-platform framework
-- **React** for the powerful UI library
-- **Community** contributors and testers
+- **Datecs** for their fiscal printers and FPrint software
+- **Wine** project for Windows compatibility on macOS/Linux
+- **Electron** for the cross-platform framework
+- **React** for the UI library
+- **Open source community** for inspiration and support
 
 ## 📞 Support
 
-- **Documentation**: Check [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed instructions
-- **Issues**: Open an [issue](../../issues) on GitHub
-- **Discussions**: Use [GitHub Discussions](../../discussions) for questions
-- **Datecs Support**: Contact Datecs for printer-specific issues
+- **Documentation**: [docs/](docs/) folder and [SETUP_GUIDE.md](SETUP_GUIDE.md)
+- **Issues**: [GitHub Issues](../../issues) for bug reports
+- **Discussions**: [GitHub Discussions](../../discussions) for questions
+- **Datecs Support**: Contact Datecs for printer hardware issues
+- **Wine Support**: [WineHQ](https://www.winehq.org/) for Wine-related issues
 
 ---
 
-**Built with modern web technologies for the macOS + Datecs community** 💻⚡
+**Built with ❤️ for the macOS + Datecs community**
 
-*If this project helped you, please ⭐ star it on GitHub!*
+*Using Wine to bring Windows FPrint to macOS with a modern UI*
+
+*Star ⭐ this repo if it helped you!*

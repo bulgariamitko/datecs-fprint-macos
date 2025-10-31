@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Save, Wifi, HardDrive } from 'lucide-react';
+import { Save, Wifi, HardDrive, FolderOpen } from 'lucide-react';
+import InfoTooltip from './InfoTooltip';
+
+const { ipcRenderer } = window.require('electron');
 
 const ConfigurationPanel = ({ config, onSave }) => {
   const [formData, setFormData] = useState(config);
@@ -18,6 +21,17 @@ const ConfigurationPanel = ({ config, onSave }) => {
       await onSave(formData);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const selectWatchFolder = async () => {
+    try {
+      const result = await ipcRenderer.invoke('select-folder');
+      if (result.success && result.folderPath) {
+        handleChange('watchFolder', result.folderPath);
+      }
+    } catch (error) {
+      console.error('Error selecting folder:', error);
     }
   };
 
@@ -60,7 +74,10 @@ const ConfigurationPanel = ({ config, onSave }) => {
           </div>
 
           <div className="form-group">
-            <label>Serial Number *</label>
+            <label className="flex items-center">
+              Serial Number *
+              <InfoTooltip content="Your printer's unique serial number, found on the device label or in system information." />
+            </label>
             <input
               type="text"
               value={formData.serialNumber || ''}
@@ -70,7 +87,10 @@ const ConfigurationPanel = ({ config, onSave }) => {
           </div>
 
           <div className="form-group">
-            <label>Fiscal Memory Number</label>
+            <label className="flex items-center">
+              Fiscal Memory Number
+              <InfoTooltip content="Optional fiscal memory identifier for your printer, used for verification purposes." />
+            </label>
             <input
               type="text"
               value={formData.fiscalMemoryNumber || ''}
@@ -110,7 +130,10 @@ const ConfigurationPanel = ({ config, onSave }) => {
           </div>
 
           <div className="form-group">
-            <label>Connection Timeout (ms)</label>
+            <label className="flex items-center">
+              Connection Timeout (ms)
+              <InfoTooltip content="How long to wait for printer responses before timing out. 10000ms (10 seconds) is recommended." />
+            </label>
             <input
               type="number"
               value={formData.timeout || 10000}
@@ -122,13 +145,41 @@ const ConfigurationPanel = ({ config, onSave }) => {
           </div>
 
           <div className="form-group">
-            <label>Operator Password</label>
+            <label className="flex items-center">
+              Operator Password
+              <InfoTooltip content="Optional password for printer operations. Leave blank if not required by your printer setup." />
+            </label>
             <input
               type="password"
               value={formData.operatorPassword || ''}
               onChange={(e) => handleChange('operatorPassword', e.target.value)}
               placeholder="Enter operator password"
             />
+          </div>
+
+          <div className="form-group">
+            <label className="flex items-center">
+              Watch Folder for Resident Mode
+              <InfoTooltip content="Path to the folder where you'll drop .txt files with printer commands for automatic processing." />
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={formData.watchFolder || ''}
+                onChange={(e) => handleChange('watchFolder', e.target.value)}
+                placeholder="Select a folder..."
+                className="flex-1"
+                readOnly
+              />
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={selectWatchFolder}
+              >
+                <FolderOpen className="w-4 h-4" />
+                Browse
+              </button>
+            </div>
           </div>
         </div>
       </div>
