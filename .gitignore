@@ -105,3 +105,16 @@ logs/
 # Temporary files
 tmp/
 temp/
+
+# Visual Studio build artifacts
+.vs/
+obj/
+bin/
+*.suo
+*.user
+*.cache
+
+# Delphi build artifacts
+DCU/
+*.dcu
+*.~*
