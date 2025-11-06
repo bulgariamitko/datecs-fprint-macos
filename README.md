@@ -608,10 +608,9 @@ An incomplete Electron + React UI exists in the `electron-app/` folder but is **
 
 ## 📚 Documentation
 
-- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Detailed Wine setup instructions
 - **[docs/](docs/)** - Technical protocol documentation
 - **[experimental/native-protocol/](experimental/native-protocol/)** - Protocol research
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute
+- **[electron-app/CONTRIBUTING.md](electron-app/CONTRIBUTING.md)** - Contributing guidelines (Electron app)
 
 ---
 
@@ -638,9 +637,10 @@ We welcome contributions in several areas:
 ### 4. Electron App (Optional)
 - The Electron app in `electron-app/` is incomplete
 - Contributions welcome but not prioritized
+- See [electron-app/CONTRIBUTING.md](electron-app/CONTRIBUTING.md) for Electron-specific guidelines
 - Discuss in GitHub issues before investing time
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+For general contributions, open an issue or pull request on GitHub.
 
 ---
 
