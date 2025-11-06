@@ -597,33 +597,24 @@ An incomplete Electron + React UI exists in the `electron-app/` folder but is **
 
 ## 📚 Documentation
 
-- **[docs/](docs/)** - Technical protocol documentation
-- **[electron-app/CONTRIBUTING.md](electron-app/CONTRIBUTING.md)** - Contributing guidelines (Electron app)
+All documentation is contained in this README. For Electron app development docs, see:
+- **[electron-app/README.md](electron-app/README.md)** - Electron app status and info
+- **[electron-app/CONTRIBUTING.md](electron-app/CONTRIBUTING.md)** - Contributing guidelines
+- **[electron-app/docs/](electron-app/docs/)** - Technical protocol documentation
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions in several areas:
+The Wine-based solution is **complete and working**. The only area open for contributions is:
 
-### 1. Documentation
-- Improve Wine setup instructions
-- Add troubleshooting tips
-- Create video tutorials
-- Test with different printer models
+### Electron App (Experimental)
+- The Electron app in `electron-app/` is incomplete and experimental
+- Contributions are welcome but not prioritized
+- See [electron-app/CONTRIBUTING.md](electron-app/CONTRIBUTING.md) for development guidelines
+- Please discuss in GitHub issues before investing time
 
-### 2. Monitor App Enhancements
-- Add more status checks
-- Improve error reporting
-- Add notification preferences
-
-### 3. Electron App (Optional)
-- The Electron app in `electron-app/` is incomplete
-- Contributions welcome but not prioritized
-- See [electron-app/CONTRIBUTING.md](electron-app/CONTRIBUTING.md) for Electron-specific guidelines
-- Discuss in GitHub issues before investing time
-
-For general contributions, open an issue or pull request on GitHub.
+**Note:** The main Wine-based solution (FPrint + Chrome extension + Monitor app) is production-ready and does not require additional development.
 
 ---
 
