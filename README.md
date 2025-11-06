@@ -587,17 +587,6 @@ All Datecs fiscal printers supported by Windows FPrint work via Wine:
 
 ## 🔮 Experimental Work
 
-### Native Protocol Implementation
-
-Long-term experimental goal: eliminate Wine dependency with native protocol implementation.
-
-📁 **See [experimental/native-protocol/](experimental/native-protocol/)** for:
-- Protocol decoding work
-- Test scripts
-- Research notes
-
-**Status**: Experimental, incomplete. Wine-based solution is the recommended approach.
-
 ### Electron App
 
 An incomplete Electron + React UI exists in the `electron-app/` folder but is **not functional** and may never be completed. The current Wine-based solution with the monitor app provides all necessary functionality.
@@ -609,7 +598,6 @@ An incomplete Electron + React UI exists in the `electron-app/` folder but is **
 ## 📚 Documentation
 
 - **[docs/](docs/)** - Technical protocol documentation
-- **[experimental/native-protocol/](experimental/native-protocol/)** - Protocol research
 - **[electron-app/CONTRIBUTING.md](electron-app/CONTRIBUTING.md)** - Contributing guidelines (Electron app)
 
 ---
@@ -629,12 +617,7 @@ We welcome contributions in several areas:
 - Improve error reporting
 - Add notification preferences
 
-### 3. Protocol Research
-- Decode Datecs commands
-- Test with different printer models
-- Document findings in experimental/native-protocol/
-
-### 4. Electron App (Optional)
+### 3. Electron App (Optional)
 - The Electron app in `electron-app/` is incomplete
 - Contributions welcome but not prioritized
 - See [electron-app/CONTRIBUTING.md](electron-app/CONTRIBUTING.md) for Electron-specific guidelines
