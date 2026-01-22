@@ -46,5 +46,5 @@ app = BUNDLE(
     coll,
     name='FPrintMonitor.app',
     icon=None,
-    bundle_identifier='com.fprint.unified',
+    bundle_identifier=None,
 )

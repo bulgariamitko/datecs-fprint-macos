@@ -9,7 +9,7 @@ import shutil
 
 class UnifiedMonitor(rumps.App):
     def __init__(self):
-        super(UnifiedMonitor, self).__init__("Monitor", "🟢")
+        super(UnifiedMonitor, self).__init__("Monitor", "🖨️")
         self.config_path = os.path.expanduser("~/.config/fprint_monitor/config.json")
         self.load_config()
 
@@ -30,6 +30,10 @@ class UnifiedMonitor(rumps.App):
 
         # Initial check
         self.check_status(None)
+
+        # Auto-start FPrint if not running
+        if not self.check_fprint_running():
+            self.start_fprint(None)
 
     def load_config(self):
         """Load configuration from file"""
@@ -65,6 +69,7 @@ class UnifiedMonitor(rumps.App):
             capture_output=True,
             text=True
         )
+        print(f"[DEBUG] pgrep FPrint.exe: returncode={result.returncode}, stdout='{result.stdout.strip()}', stderr='{result.stderr.strip()}'")
         return result.returncode == 0
 
     def check_printer_connection(self):
@@ -74,14 +79,20 @@ class UnifiedMonitor(rumps.App):
             sock.settimeout(2)
             result = sock.connect_ex((self.config["printer_ip"], self.config["printer_port"]))
             sock.close()
+            print(f"[DEBUG] Printer socket connect to {self.config['printer_ip']}:{self.config['printer_port']}: result={result} (0=success)")
             return result == 0
-        except:
+        except Exception as e:
+            print(f"[DEBUG] Printer connection error: {e}")
             return False
 
     def check_status(self, _):
         """Check status of both systems"""
         fprint_running = self.check_fprint_running()
         printer_connected = self.check_printer_connection()
+
+        # Debug logging
+        print(f"[DEBUG] FPrint running: {fprint_running}, Printer connected: {printer_connected}")
+        print(f"[DEBUG] Printer config: {self.config['printer_ip']}:{self.config['printer_port']}")
 
         # Update menu items
         fprint_status = "✅ Running" if fprint_running else "❌ Not Running"
@@ -93,7 +104,7 @@ class UnifiedMonitor(rumps.App):
         # Update icon color (use title since we can't use emoji in icon)
         if fprint_running and printer_connected:
             # Both running - GREEN
-            self.title = "🟢"
+            self.title = "🖨️"
         elif fprint_running or printer_connected:
             # One running - YELLOW
             self.title = "🟡"
@@ -136,35 +147,51 @@ class UnifiedMonitor(rumps.App):
         """Start FPrint.exe if not running"""
         if not self.check_fprint_running():
             try:
-                # Find wine executable
-                wine_path = shutil.which("wine") or "/opt/homebrew/bin/wine"
+                # Get FPrintWIN directory (parent of mac-app-monitor)
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                fprint_dir = os.path.dirname(script_dir)
+                fprint_exe = os.path.join(fprint_dir, "FPrint.exe")
 
-                # Check if wine exists
+                # Check if FPrint.exe exists
+                if not os.path.exists(fprint_exe):
+                    rumps.alert(f"FPrint.exe not found at {fprint_exe}")
+                    return
+
+                # Use wine from homebrew directly
+                wine_path = "/opt/homebrew/bin/wine"
                 if not os.path.exists(wine_path):
-                    rumps.alert(f"Wine not found at {wine_path}. Please install wine via Homebrew: brew install wine-stable")
+                    wine_path = "/usr/local/bin/wine"
+                if not os.path.exists(wine_path):
+                    wine_path = shutil.which("wine")
+
+                if not wine_path or not os.path.exists(wine_path):
+                    rumps.alert("Wine not found. Please install wine via Homebrew: brew install wine-stable")
                     return
 
-                # Use Downloads folder path
-                fprint_path = os.path.expanduser("~/Downloads/datecs-fprint-macos/FPrintWIN")
+                print(f"[DEBUG] Starting FPrint: {wine_path} {fprint_exe}")
+                print(f"[DEBUG] Working directory: {fprint_dir}")
 
-                if not os.path.exists(fprint_path):
-                    rumps.alert(f"FPrintWIN not found at {fprint_path}.\n\nPlease ensure the repository is cloned to ~/Downloads/datecs-fprint-macos/")
-                    return
-
+                # Start FPrint.exe using wine - exactly like terminal command
                 subprocess.Popen(
-                    [wine_path, "FPrint.exe", "/resident"],
-                    cwd=fprint_path,
+                    [wine_path, "FPrint.exe"],
+                    cwd=fprint_dir,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
-                    env=dict(os.environ, PATH=f"/opt/homebrew/bin:{os.environ.get('PATH', '')}")
+                    start_new_session=True
                 )
-                time.sleep(2)
+
+                # Wait for Wine to initialize
+                time.sleep(3)
                 self.check_status(None)
-                rumps.notification(
-                    title="FPrint Started",
-                    subtitle="",
-                    message="FPrint.exe has been started in resident mode"
-                )
+
+                if self.check_fprint_running():
+                    rumps.notification(
+                        title="FPrint Started",
+                        subtitle="",
+                        message="FPrint.exe has been started successfully"
+                    )
+                else:
+                    rumps.alert("FPrint.exe may have failed to start. Please try again.")
             except Exception as e:
                 rumps.alert(f"Failed to start FPrint: {str(e)}")
         else:
@@ -172,11 +199,56 @@ class UnifiedMonitor(rumps.App):
 
     def restart_fprint(self, _):
         """Restart FPrint.exe"""
-        # Kill if running
-        subprocess.run(["pkill", "-f", "FPrint.exe"], stderr=subprocess.DEVNULL)
-        time.sleep(1)
-        # Start again
-        self.start_fprint(None)
+        print("[DEBUG] Restarting FPrint...")
+
+        # Kill ALL wine-related processes thoroughly
+        subprocess.run(["pkill", "-9", "-f", "FPrint.exe"], stderr=subprocess.DEVNULL)
+        subprocess.run(["pkill", "-9", "-f", "wine"], stderr=subprocess.DEVNULL)
+        subprocess.run(["pkill", "-9", "-f", "wineserver"], stderr=subprocess.DEVNULL)
+        subprocess.run(["pkill", "-9", "-f", "winedevice"], stderr=subprocess.DEVNULL)
+
+        # Wait for processes to fully terminate
+        time.sleep(3)
+
+        print("[DEBUG] All wine processes killed, starting FPrint...")
+
+        # Start fresh
+        # Force start even if check says it's running (it shouldn't be after kill)
+        try:
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            fprint_dir = os.path.dirname(script_dir)
+            wine_path = "/opt/homebrew/bin/wine"
+
+            if not os.path.exists(wine_path):
+                wine_path = "/usr/local/bin/wine"
+            if not os.path.exists(wine_path):
+                wine_path = shutil.which("wine")
+
+            print(f"[DEBUG] Using wine: {wine_path}")
+            print(f"[DEBUG] FPrint dir: {fprint_dir}")
+
+            subprocess.Popen(
+                [wine_path, "FPrint.exe"],
+                cwd=fprint_dir,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True
+            )
+
+            # Wait for Wine to initialize
+            time.sleep(3)
+            self.check_status(None)
+
+            if self.check_fprint_running():
+                rumps.notification(
+                    title="FPrint Restarted",
+                    subtitle="",
+                    message="FPrint.exe has been restarted successfully"
+                )
+            else:
+                rumps.alert("FPrint.exe may have failed to restart. Please try again.")
+        except Exception as e:
+            rumps.alert(f"Failed to restart FPrint: {str(e)}")
 
     def quit_all(self, _):
         """Quit monitoring and FPrint"""
